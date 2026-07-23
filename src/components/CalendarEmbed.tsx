@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import './CalendarEmbed.css'
 
 const ICS_URL = '/api/calendar.php'
 
@@ -65,20 +64,20 @@ function MonthGrid({ year, month, ranges, today }: MonthGridProps) {
   while (cells.length % 7 !== 0) cells.push(null)
 
   return (
-    <div className="cal-month">
-      <p className="cal-month-title">
+    <div className="flex-1 min-w-0">
+      <p className="text-center font-semibold text-gray-800 mb-3 text-lg">
         {MONTH_NAMES[month]} {year}
       </p>
 
-      <div className="cal-dow-row">
+      <div className="grid grid-cols-7 mb-1">
         {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
-          <div key={i} className="cal-dow">
+          <div key={i} className="text-center text-sm font-medium text-gray-400 py-1">
             {d}
           </div>
         ))}
       </div>
 
-      <div className="cal-grid">
+      <div className="grid grid-cols-7 gap-y-2">
         {cells.map((day, i) => {
           if (!day) return <div key={i} />
 
@@ -87,14 +86,24 @@ function MonthGrid({ year, month, ranges, today }: MonthGridProps) {
           const todayCell = date.toDateString() === today.toDateString()
           const booked = !past && isBooked(date, ranges)
 
-          const classes = ['cal-cell']
-          if (past) classes.push('cal-cell--past')
-          else if (booked) classes.push('cal-cell--booked')
-          else classes.push('cal-cell--available')
-          if (todayCell) classes.push('cal-cell--today')
+          const base =
+            'flex items-center justify-center h-11 w-full text-base rounded-lg select-none transition-colors '
+
+          let style = base
+          if (past) {
+            style += 'text-gray-300'
+          } else if (booked) {
+            style += 'bg-red-50 text-red-300 line-through cursor-not-allowed'
+          } else {
+            style += 'bg-green-50 text-green-700 font-medium'
+          }
+
+          if (todayCell) {
+            style += ' ring-2 ring-primary ring-offset-1'
+          }
 
           return (
-            <div key={i} className={classes.join(' ')}>
+            <div key={i} className={style}>
               {day}
             </div>
           )
@@ -149,54 +158,58 @@ export default function CalendarEmbed() {
 
   if (loading) {
     return (
-      <div className="cal-card cal-card--center">
-        <p className="cal-status cal-status--loading">Loading availability...</p>
+      <div className="flex items-center justify-center h-64 bg-white rounded-2xl shadow-md">
+        <p className="text-gray-400 animate-pulse">Loading availability...</p>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="cal-card cal-card--center">
-        <p className="cal-status cal-status--error">{error}</p>
+      <div className="flex items-center justify-center h-64 bg-white rounded-2xl shadow-md">
+        <p className="text-red-400">{error}</p>
       </div>
     )
   }
 
   return (
-    <div className="cal-card">
-      <div className="cal-header">
+    <div className="bg-white rounded-2xl shadow-md p-6 lg:p-10">
+      <div className="flex items-start gap-2 lg:gap-6">
         <button
           onClick={prev}
           disabled={!canGoPrev}
-          className="cal-nav-btn"
+          className="mt-1 p-2 rounded-lg hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
           aria-label="Previous month"
         >
-          <ChevronLeft size={18} />
+          <ChevronLeft size={22} />
         </button>
 
-        <div className="cal-months">
+        <div className="flex-1 flex flex-col sm:flex-row gap-8 lg:gap-12">
           <MonthGrid year={viewYear} month={viewMonth} ranges={ranges} today={today} />
-          <div className="cal-divider" />
+          <div className="hidden sm:block w-px bg-gray-100 self-stretch" />
           <MonthGrid year={second.year} month={second.month} ranges={ranges} today={today} />
         </div>
 
-        <button onClick={next} className="cal-nav-btn" aria-label="Next month">
-          <ChevronRight size={18} />
+        <button
+          onClick={next}
+          className="mt-1 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          aria-label="Next month"
+        >
+          <ChevronRight size={22} />
         </button>
       </div>
 
-      <div className="cal-legend">
-        <div className="cal-legend-item">
-          <div className="cal-legend-swatch cal-legend-swatch--available" />
+      <div className="flex gap-6 mt-6 pt-5 border-t border-gray-100 text-sm text-gray-600 justify-center">
+        <div className="flex items-center gap-2">
+          <div className="w-3.5 h-3.5 rounded bg-green-100 border border-green-300" />
           Available
         </div>
-        <div className="cal-legend-item">
-          <div className="cal-legend-swatch cal-legend-swatch--booked" />
+        <div className="flex items-center gap-2">
+          <div className="w-3.5 h-3.5 rounded bg-red-50 border border-red-200" />
           Booked
         </div>
-        <div className="cal-legend-item">
-          <div className="cal-legend-swatch cal-legend-swatch--today" />
+        <div className="flex items-center gap-2">
+          <div className="w-3.5 h-3.5 rounded ring-2 ring-primary" />
           Today
         </div>
       </div>

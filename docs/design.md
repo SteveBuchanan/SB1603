@@ -73,4 +73,109 @@ Build a modern, mobile-friendly vacation rental website for **Sterling Breeze Co
 
 ### 4. Availability / Calendar
 - Section heading: "Check Availability"
-- Embedded Google Calendar iframe:
+- Has its own dedicated page/route and is its own component, sized larger than an
+  inline embed so the two-month grid is easy to read. Parses the property's VRBO
+  ICS feed directly rather than embedding a Google Calendar iframe — see
+  [REQUIREMENTS.md](REQUIREMENTS.md) for the full spec (CORS constraint, the
+  GoDaddy PHP proxy, parsing approach).
+
+### 5. Location
+- Section heading: "Location"
+- Property address block: Panama City Beach, FL
+- Nearby attractions list with distances:
+  - Pier Park (~1 mile)
+  - Gulf of Mexico beach access (steps away)
+  - Local restaurants and shops
+- Optional: embedded Google Maps iframe for the area
+
+### 6. Contact
+- Simple contact form: Name, Email, Phone, Message, Dates of Interest
+- Alternatively link to VRBO/Airbnb listing
+- Phone and email displayed prominently
+
+---
+
+## Image Inventory
+
+All images are located in `public/images/` and categorized in
+[`src/data/images.ts`](../src/data/images.ts):
+
+| File | Category |
+|---|---|
+| `sterling-breeze-unit-1603_26.jpg` | Exterior / Hero |
+| `Building.jpg` | Exterior |
+| `Complex.jpg` | Exterior |
+| `Sunset.jpg` | Exterior / Atmosphere |
+| `Beach Out of Season.jpg` | Area |
+| `Pier Park 2.jpg` | Area |
+| `pier_park_1.jpg` | Area |
+| `Living Room 1.jpg` | Interior |
+| `Living Room 2.jpg` | Interior |
+| `Master Bed.JPG` | Interior |
+| `Master Bath 1.jpg` | Interior |
+| `Master Bath 2.jpg` | Interior |
+| `Second Bath.jpg` | Interior |
+| `Bunks.JPG` | Interior |
+| `Wine Bar area.jpg` | Interior |
+| `Patio Furniture.jpg` | Interior / Exterior |
+| `Pool 3.jpg` | Amenity |
+| `pool hot tub.jpg` | Amenity |
+| `GYM.jpg` | Amenity |
+| `Grill.jpg` | Amenity |
+| `Fire Pit 2.jpg` | Amenity |
+| `Laundry.jpg` | Amenity |
+| `IMG_0309.jpg` | Area |
+| `IMG_7346.jpg` | Interior |
+| `IMG_8529.JPG` | Interior |
+| `IMG_8574.JPG` | Interior |
+
+`IMG_7690.jpg` is excluded from the site — it's a photo of an unrelated event
+ticket, not a property photo.
+
+---
+
+## Component Architecture
+
+```
+src/
+├── components/
+│   ├── Sidebar.tsx          # Collapsible sidebar navigation
+│   ├── TopBar.tsx           # Mobile-only top bar
+│   ├── Layout.tsx           # Page wrapper with sidebar + content
+│   ├── ImageCarousel.tsx    # Carousel component
+│   ├── HeroSection.tsx      # Landing page hero
+│   ├── AmenityGrid.tsx      # Amenities display
+│   ├── CalendarEmbed.tsx    # Availability calendar (own page, see REQUIREMENTS.md)
+│   └── ContactForm.tsx      # Contact section
+├── pages/
+│   ├── Home.tsx
+│   ├── Gallery.tsx
+│   ├── Amenities.tsx
+│   ├── Calendar.tsx
+│   ├── Location.tsx
+│   └── Contact.tsx
+├── data/
+│   └── images.ts            # Image inventory with category metadata
+└── App.tsx
+```
+
+---
+
+## Responsive Breakpoints
+
+| Breakpoint | Behavior |
+|---|---|
+| Mobile (< 768px) | Sidebar hidden; hamburger icon in top bar opens overlay drawer |
+| Tablet (768px–1023px) | Sidebar collapses to icon-only rail |
+| Desktop (1024px+) | Full sidebar visible with labels |
+
+---
+
+## Design Details
+
+- **VRBO-inspired**: Property stats bar (beds, baths, guests), clean white cards, large imagery
+- **Beach theme**: Use ocean blue (`#0077B6`), sand (`#F4A261`), and white backgrounds
+- **Cards**: Rounded corners, subtle drop shadows
+- **Buttons**: Solid teal/blue primary; ghost secondary
+- **Transitions**: Smooth sidebar open/close animation (200–300ms)
+- **Accessibility**: Aria labels on nav, buttons, and carousel controls

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/steve/AppData/Local/Temp/claude/c--Projects-Repos-SB1603/f33a4dcb-5b97-49bd-8a40-aa194fbc3d7d/scratchpad/verify/**)",
+      "Bash(node check_drawer.js)"
+    ]
+  }
+}

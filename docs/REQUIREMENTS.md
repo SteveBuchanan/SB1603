@@ -7,6 +7,10 @@ booking calendar, showing which days are booked vs. available.
 
 ### Functional requirements
 
+Contained in the images file are images for my condo rental website.  Make the home page wallpaper be on of the images of the beachside building.
+
+The calendar should be its own componet and have its own page with the sizing of the calendar to make it easy to see.
+
 - Fetch and parse the ICS feed at:
   `https://www.vrbo.com/icalendar/e093697f12a04b218d199a606fcd2d3b.ics?nonTentative&includeTentative=true`
 - Render two adjacent month grids (current month + next), each showing:
